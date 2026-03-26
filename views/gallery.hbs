@@ -1,0 +1,103 @@
+<style>
+
+#imageChoice {
+   border: 3px double dodgerblue; 
+   border-radius: 8px;
+   text-align: center; 
+   font-weight: bolder;
+   font-family: "Lucida Console", monospace;
+   font-size: 16px;
+   color: purple;
+   margin-bottom: 190px;
+   padding: 10px;
+   background:  lightcyan; 
+  }
+
+.image-list {
+  text-align: center;
+}
+
+.user-box {
+  width: 100%; 
+  text-align: center;  
+  margin-top: 40px;
+}
+
+.username {
+  font-weight: bold;
+  color: purple;
+}
+
+.logout {
+  display: none;
+  margin-left: 10px;
+  font-weight: bold;
+  border: 3px double dodgerblue; 
+  border-radius: 8px;
+  padding: 10px 20px;
+  background:  lightcyan; 
+  margin: 0 auto;
+  text-decoration: none;
+  color: dodgerblue;
+}
+
+.logout:hover { color: orange; border-color: orange; }
+
+.user-box:hover .username {
+  display: none;
+}
+
+.user-box:hover .logout {
+  display: inline;
+}
+
+</style>
+
+<h1>Van Gogh Painting Collection</h1>
+
+<form id="gallery-form" class="gallery-form" action="/display" method="POST">
+
+  <div class="image-list">
+
+    <select name="imageChoice" id="imageChoice">
+    <option value="" disabled selected hidden>Select a painting</option>
+    {{#each images}}
+      <option value="{{this.fileName}}">{{this.label}}</option>
+    {{/each}}
+    </select>
+
+    <div class="submit-row">
+      <button type="submit" form="gallery-form">Submit</button>
+    </div>
+
+    <div class="user-box">
+      <span class="username">{{username}}</span>
+      <a href="/logout" class="logout">Logout</a>
+    </div>
+
+  </div>
+
+  <div class="presentation-box">
+
+  {{#if selectedImage}}
+
+    <a {{#if selectedFileName}}href="/order/{{selectedFileName}}"{{/if}}>
+      <img 
+        src="{{selectedImage}}" 
+        alt="{{selectedLabel}}"
+      >
+    </a>
+
+    <div id="label"><label class="image-label">{{selectedLabel}}</label></div>
+
+  {{else}}
+    <p>No image available</p>
+  {{/if}}
+
+</div>
+
+  {{#if message}}
+    <script>alert("{{message}}");</script>
+  {{/if}}
+
+</form>
