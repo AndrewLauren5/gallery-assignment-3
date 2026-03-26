@@ -55,7 +55,7 @@ router.post("/display", async (req, res) => {
     label: filenameToLabel(doc.fileName)
   }));
 
-  const requested = req.body.imageChoice || null;
+  const requested = req.body?.imageChoice || null;
 
   if (!requested) {
     return res.render("gallery", {
