@@ -81,7 +81,7 @@
 
   {{#if selectedImage}}
 
-    <a {{#if selectedFileName}}href="/order/{{selectedFileName}}"{{/if}}>
+    <a href="{{#if selectedFileName}}/order/{{selectedFileName}}{{else}}#{{/if}}">
       <img 
         src="{{selectedImage}}" 
         alt="{{selectedLabel}}"
