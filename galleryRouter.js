@@ -3,7 +3,7 @@ const { getGalleryCollection } = require("./db");
 
 const router = express.Router();
 
-const DEFAULT_IMAGE = "/images/Self Portrait.jpg";
+const DEFAULT_IMAGE = "/images/Self%20Portrait.jpg";
 const DEFAULT_LABEL = "Self Portrait";
 
 function filenameToLabel(fileName) {
