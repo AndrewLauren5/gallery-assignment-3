@@ -4,6 +4,7 @@ const { getGalleryCollection } = require("./db");
 const router = express.Router();
 
 const DEFAULT_IMAGE = "/images/Self Portrait.jpg";
+const DEFAULT_LABEL = "Self Portrait";
 
 function filenameToLabel(fileName) {
   const dotIndex = fileName.lastIndexOf(".");
@@ -13,7 +14,6 @@ function filenameToLabel(fileName) {
 
 router.get("/", async (req, res) => {
   const gallery = await getGalleryCollection();
-
   const docs = await gallery.find({ status: "A" }).toArray();
 
   const images = docs.map((doc) => ({
@@ -25,7 +25,7 @@ router.get("/", async (req, res) => {
   const message = req.query.message || null;
 
   let selectedImage = DEFAULT_IMAGE;
-  let selectedLabel = filenameToLabel("Self Portrait.jpg");
+  let selectedLabel = DEFAULT_LABEL;
 
   if (selectedFileName) {
     const found = docs.find((d) => d.fileName === selectedFileName);
@@ -55,19 +55,29 @@ router.post("/display", async (req, res) => {
     label: filenameToLabel(doc.fileName)
   }));
 
-  const requested = req.body.imageChoice;
+  const requested = req.body.imageChoice || null;
+
+  if (!requested) {
+    return res.render("gallery", {
+      title: "Van Gogh Gallery",
+      username: req.session.user.username,
+      images,
+      selectedImage: DEFAULT_IMAGE,
+      selectedLabel: DEFAULT_LABEL,
+      selectedFileName: null
+    });
+  }
+
+  const found = docs.find((d) => d.fileName === requested);
 
   let selectedImage = DEFAULT_IMAGE;
-  let selectedLabel = filenameToLabel("Self Portrait.jpg");
+  let selectedLabel = DEFAULT_LABEL;
   let selectedFileName = null;
 
-  if (requested) {
-    const found = docs.find((d) => d.fileName === requested);
-    if (found) {
-      selectedImage = `/images/${found.fileName}`;
-      selectedLabel = filenameToLabel(found.fileName);
-      selectedFileName = found.fileName;
-    }
+  if (found) {
+    selectedImage = `/images/${found.fileName}`;
+    selectedLabel = filenameToLabel(found.fileName);
+    selectedFileName = found.fileName;
   }
 
   res.render("gallery", {
